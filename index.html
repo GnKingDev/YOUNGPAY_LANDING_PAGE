@@ -3,14 +3,25 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>YoungPay | Gestion Financiere</title>
-    <meta
-      name="description"
-      content="YoungPay simplifie la gestion de vos finances, transferts et paiements en toute securite."
-    />
+    <meta name="description" content="YoungPay — Agrégateur de paiement pour l'Afrique. Acceptez Orange Money, MTN MoMo, Moov Money, cartes bancaires et plus encore via une seule API." />
+    <link rel="icon" type="image/png" href="/assets/images/logo_icon.png" />
+    <meta name="theme-color" content="#1E5BB8" />
+    <!-- Polices : preconnect + display=swap pour ne pas bloquer le rendu -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preload" as="style"
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap"
+      rel="stylesheet" media="print" onload="this.media='all'" />
+    <noscript>
+      <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet" />
+    </noscript>
+    <!-- DNS prefetch pour l'API -->
+    <link rel="dns-prefetch" href="https://api.young-pay.net" />
+    <title>YoungPay — Le Paiement Africain Simplifié</title>
   </head>
   <body>
     <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
+    <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
