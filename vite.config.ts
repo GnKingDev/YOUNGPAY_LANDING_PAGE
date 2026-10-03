@@ -7,8 +7,9 @@ export default defineConfig({
   server: {
     proxy: {
       '/api/v1': {
-        target: 'http://localhost:4000',
-        changeOrigin: true,
+        target: 'https://young-pay.net',
+        changeOrigin: true,   // réécrit le Host → young-pay.net (nécessaire pour le TLS/vhost)
+        secure: true,         // le certificat HTTPS de young-pay.net est valide
       },
     },
   },
@@ -17,20 +18,20 @@ export default defineConfig({
     // Seuil d'alerte chunk (dashboard est gros, c'est voulu)
     chunkSizeWarningLimit: 600,
 
-    rollupOptions: {
-      output: {
+    rollupOptions: { 
+      output: { 
         // Séparer les grosses dépendances en chunks distincts pour le cache navigateur
-        manualChunks: {
+        manualChunks: { 
           'vendor-react':  ['react', 'react-dom', 'react-router-dom'],
-          'vendor-lucide': ['lucide-react'],
-        },
+          'vendor-lucide': ['lucide-react'], 
+        }, 
       },
     },
 
     // Minification esbuild (inclus dans Vite, pas besoin d'installer)
     minify: 'esbuild',
 
-    // Source maps désactivées en prod
-    sourcemap: false,
+    // Source maps désactivées en prod 
+    sourcemap: false, 
   },
 })

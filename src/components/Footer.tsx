@@ -19,31 +19,31 @@ const InstagramIcon = () => (
 
 const footerLinks = {
   Produit: [
-    { label: 'Fonctionnalités',     href: '#fonctionnalites' },
-    { label: 'Tarifs',              href: '#tarifs' },
-    { label: 'Moyens de paiement',  href: '#paiements' },
-    { label: 'Sécurité',            href: '#' },
-    { label: 'Mises à jour',        href: '#' },
+    { label: 'Fonctionnalités',     href: '/#fonctionnalites' },
+    { label: 'Tarifs',              href: '/#tarifs' },
+    { label: 'Moyens de paiement',  href: '/#paiements' },
+    { label: 'Sécurité',            href: '/securite' },
+    { label: 'Mises à jour',        href: '/mises-a-jour' },
   ],
   Développeurs: [
     { label: 'Documentation API', href: '/docs' },
     { label: 'Référence API',     href: '/docs' },
-    { label: 'Webhooks',          href: '#' },
-    { label: 'SDK & Librairies',  href: '#' },
-    { label: 'Sandbox de test',   href: '#' },
+    { label: 'Webhooks',          href: '/webhooks' },
+    { label: 'SDK & Librairies',  href: '/sdk' },
+    { label: 'Sandbox de test',   href: '/sandbox' },
   ],
   Entreprise: [
-    { label: 'À propos',    href: '#' },
-    { label: 'Blog',        href: '#' },
-    { label: 'Partenaires', href: '#' },
-    { label: 'Carrières',   href: '#' },
-    { label: 'Contact',     href: '#' },
+    { label: 'À propos',    href: '/a-propos' },
+    { label: 'Blog',        href: '/blog' },
+    { label: 'Partenaires', href: '/partenaires' },
+    { label: 'Carrières',   href: '/carrieres' },
+    { label: 'Contact',     href: '/contact' },
   ],
   Légal: [
     { label: "Conditions d'utilisation",   href: '/terms' },
     { label: 'Politique de confidentialité', href: '/privacy' },
-    { label: 'Cookies',                    href: '#' },
-    { label: 'Conformité KYB/KYC',         href: '#' },
+    { label: 'Cookies',                    href: '/cookies' },
+    { label: 'Conformité KYB/KYC',         href: '/conformite' },
   ],
 }
 
@@ -149,7 +149,7 @@ export default function Footer() {
           <div className="flex gap-4">
             <a href="/terms" className="text-navy-600 hover:text-navy-400 text-xs transition-colors">CGU</a>
             <a href="/privacy" className="text-navy-600 hover:text-navy-400 text-xs transition-colors">Confidentialité</a>
-            <a href="#" className="text-navy-600 hover:text-navy-400 text-xs transition-colors">Cookies</a>
+            <a href="/cookies" className="text-navy-600 hover:text-navy-400 text-xs transition-colors">Cookies</a>
           </div>
         </div>
       </div>

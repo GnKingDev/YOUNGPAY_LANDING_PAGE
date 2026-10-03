@@ -1,67 +1,39 @@
-import { lazy, Suspense, useEffect, useRef, useState } from 'react'
+import { lazy, Suspense } from 'react'
+
+// Landing consacrée à la carte bancaire YoungPay.
+// (Les composants « collect » — Hero, Pricing, DeveloperSection… — restent dans
+//  src/components pour les autres pages, mais ne sont plus sur l'accueil.)
 
 // Above the fold — chargés immédiatement
-import Navbar from '../components/Navbar'
-import Hero   from '../components/Hero'
+import CardNav  from '../components/card/CardNav'
+import CardHero from '../components/card/CardHero'
 
-// Below the fold — lazy loaded
-const PaymentMethods   = lazy(() => import('../components/PaymentMethods'))
-const Features         = lazy(() => import('../components/Features'))
-const MerchantSection  = lazy(() => import('../components/MerchantSection'))
-const HowItWorks       = lazy(() => import('../components/HowItWorks'))
-const DeveloperSection = lazy(() => import('../components/DeveloperSection'))
-const Pricing          = lazy(() => import('../components/Pricing'))
-const Footer           = lazy(() => import('../components/Footer'))
-
-function useLazySection() {
-  const ref = useRef<HTMLDivElement>(null)
-  const [visible, setVisible] = useState(false)
-
-  useEffect(() => {
-    const el = ref.current
-    if (!el || visible) return
-    const observer = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) { setVisible(true); observer.disconnect() } },
-      { rootMargin: '200px' }
-    )
-    observer.observe(el)
-    return () => observer.disconnect()
-  }, [visible])
-
-  return { ref, visible }
-}
-
-const SectionFallback = () => (
-  <div className="h-24 flex items-center justify-center">
-    <div className="w-5 h-5 border-2 border-amber-300 border-t-transparent rounded-full animate-spin opacity-30" />
-  </div>
-)
-
-function LazySection({ children }: { children: React.ReactNode }) {
-  const { ref, visible } = useLazySection()
-  return (
-    <div ref={ref}>
-      {visible
-        ? <Suspense fallback={<SectionFallback />}>{children}</Suspense>
-        : <SectionFallback />}
-    </div>
-  )
-}
+// Below the fold — chunks séparés, mais montés tout de suite :
+// les liens du menu (#tarifs, #faq…) doivent trouver leur section.
+const Merchants    = lazy(() => import('../components/card/Merchants'))
+const GetCard      = lazy(() => import('../components/card/GetCard'))
+const CardPricing  = lazy(() => import('../components/card/CardPricing'))
+const CardSecurity = lazy(() => import('../components/card/CardSecurity'))
+const CardFaq      = lazy(() => import('../components/card/CardFaq'))
+const CardFooter   = lazy(() => import('../components/card/CardFooter'))
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-white font-body">
-      <Navbar />
+    <div className="min-h-screen bg-[#F6F8FC] font-body">
+      <CardNav />
       <main>
-        <Hero />
-        <LazySection><PaymentMethods /></LazySection>
-        <LazySection><Features /></LazySection>
-        <LazySection><MerchantSection /></LazySection>
-        <LazySection><HowItWorks /></LazySection>
-        <LazySection><DeveloperSection /></LazySection>
-        <LazySection><Pricing /></LazySection>
+        <CardHero />
+        <Suspense fallback={<div className="h-screen" />}>
+          <Merchants />
+          <GetCard />
+          <CardPricing />
+          <CardSecurity />
+          <CardFaq />
+        </Suspense>
       </main>
-      <LazySection><Footer /></LazySection>
+      <Suspense fallback={null}>
+        <CardFooter />
+      </Suspense>
     </div>
   )
 }

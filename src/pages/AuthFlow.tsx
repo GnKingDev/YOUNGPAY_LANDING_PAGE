@@ -543,7 +543,7 @@ const ScreenOTP = ({ onNavigate, email }: { onNavigate: (s: Screen) => void; ema
 }
 
 /* ─── Screen 3 : Forgot Password ─────────────────────── */
-const ScreenForgot = ({ onNavigate, email: initEmail }: { onNavigate: (s: Screen) => void; email: string }) => {
+const ScreenForgot = ({ onNavigate, email: initEmail, setEmail: liftEmail }: { onNavigate: (s: Screen) => void; email: string; setEmail: (e: string) => void }) => {
   const [email,   setEmail]   = useState(initEmail)
   const [loading, setLoading] = useState(false)
   const [error,   setError]   = useState('')
@@ -556,9 +556,23 @@ const ScreenForgot = ({ onNavigate, email: initEmail }: { onNavigate: (s: Screen
     if (!emailValid)    { setError('Adresse email invalide'); return }
     setError('')
     setLoading(true)
-    await new Promise(r => setTimeout(r, 1500))
-    setLoading(false)
-    setSent(true)
+    try {
+      const res = await fetch('/api/v1/auth/password/forgot', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ email: email.trim() }),
+      })
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}))
+        throw new Error(data.error || 'Une erreur est survenue, réessayez.')
+      }
+      liftEmail(email.trim())   // partage l'email avec l'écran de réinitialisation
+      setSent(true)
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Erreur réseau')
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -580,7 +594,7 @@ const ScreenForgot = ({ onNavigate, email: initEmail }: { onNavigate: (s: Screen
 
                 <h1 className="font-bold text-2xl text-navy text-center mb-2">Mot de passe oublié ?</h1>
                 <p className="text-navy-400 text-sm text-center mb-8 leading-relaxed">
-                  Entrez l'adresse email de votre compte. Nous vous enverrons un lien de réinitialisation.
+                  Entrez l'adresse email de votre compte. Nous vous enverrons un code de réinitialisation.
                 </p>
 
                 <div className="flex flex-col gap-1.5 mb-6">
@@ -628,15 +642,15 @@ const ScreenForgot = ({ onNavigate, email: initEmail }: { onNavigate: (s: Screen
                     <Check className="w-8 h-8 text-green-500" strokeWidth={2.5} />
                   </div>
                 </div>
-                <h1 className="font-bold text-2xl text-navy mb-2">Email envoyé !</h1>
+                <h1 className="font-bold text-2xl text-navy mb-2">Code envoyé !</h1>
                 <p className="text-navy-400 text-sm leading-relaxed mb-8">
-                  Vérifiez votre boîte mail. Le lien expire dans{' '}
-                  <span className="font-semibold text-navy">15 minutes</span>.
+                  Vérifiez votre boîte mail. Le code expire dans{' '}
+                  <span className="font-semibold text-navy">5 minutes</span>.
                 </p>
-                <button onClick={() => onNavigate('otp')}
+                <button onClick={() => onNavigate('reset')}
                   className="w-full flex items-center justify-center gap-2 py-4 rounded-xl text-white font-bold text-sm"
                   style={{ background: 'linear-gradient(135deg, #1E5BB8, #3B82F6)', boxShadow: '0 8px 24px rgba(59,130,246,0.30)' }}>
-                  Vérifier mon OTP <ArrowRight className="w-4 h-4" />
+                  Saisir le code reçu <ArrowRight className="w-4 h-4" />
                 </button>
               </div>
             )}
@@ -655,7 +669,8 @@ const ScreenForgot = ({ onNavigate, email: initEmail }: { onNavigate: (s: Screen
 }
 
 /* ─── Screen 4 : Reset Password ──────────────────────── */
-const ScreenReset = ({ onNavigate }: { onNavigate: (s: Screen) => void }) => {
+const ScreenReset = ({ onNavigate, email }: { onNavigate: (s: Screen) => void; email: string }) => {
+  const [code,     setCode]     = useState('')
   const [password, setPassword] = useState('')
   const [confirm,  setConfirm]  = useState('')
   const [showPw,   setShowPw]   = useState(false)
@@ -677,13 +692,27 @@ const ScreenReset = ({ onNavigate }: { onNavigate: (s: Screen) => void }) => {
   const confirmError = confirm.length > 0 && password !== confirm
 
   const handleSubmit = async () => {
+    if (code.trim().length < 6) { setError('Entrez le code à 6 chiffres reçu par email'); return }
     if (score < 2) { setError('Le mot de passe n\'est pas assez fort'); return }
     if (password !== confirm) { setError('Les mots de passe ne correspondent pas'); return }
     setError('')
     setLoading(true)
-    await new Promise(r => setTimeout(r, 1500))
-    setLoading(false)
-    setSuccess(true)
+    try {
+      const res = await fetch('/api/v1/auth/password/reset', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ email, code: code.trim(), new_password: password }),
+      })
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}))
+        throw new Error(data.error || 'Code invalide ou expiré')
+      }
+      setSuccess(true)
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Erreur réseau')
+    } finally {
+      setLoading(false)
+    }
   }
 
   if (success) {
@@ -736,6 +765,20 @@ const ScreenReset = ({ onNavigate }: { onNavigate: (s: Screen) => void }) => {
             </p>
 
             <div className="space-y-5 mb-6">
+              {/* Code reçu par email */}
+              <div className="flex flex-col gap-1.5">
+                <label className="text-navy font-semibold text-sm">Code de vérification</label>
+                <input
+                  inputMode="numeric"
+                  maxLength={6}
+                  placeholder="Code à 6 chiffres reçu par email"
+                  value={code}
+                  onChange={e => { setCode(e.target.value.replace(/\D/g, '').slice(0, 6)); setError('') }}
+                  className="w-full rounded-xl border-2 px-4 py-3.5 text-sm text-navy font-semibold tracking-[0.3em] outline-none transition-all duration-200 bg-white placeholder:text-navy-300 placeholder:tracking-normal border-navy-200 focus:border-amber-400"
+                  style={{ fontFamily: 'Poppins, sans-serif' }}
+                />
+              </div>
+
               {/* New password */}
               <div className="flex flex-col gap-1.5">
                 <label className="text-navy font-semibold text-sm">Nouveau mot de passe</label>
@@ -887,8 +930,8 @@ export default function AuthFlow() {
         />
       )}
       {screen === 'otp'    && <ScreenOTP    onNavigate={switchTo} email={email} />}
-      {screen === 'forgot' && <ScreenForgot onNavigate={switchTo} email={email} />}
-      {screen === 'reset'  && <ScreenReset  onNavigate={switchTo} />}
+      {screen === 'forgot' && <ScreenForgot onNavigate={switchTo} email={email} setEmail={setEmail} />}
+      {screen === 'reset'  && <ScreenReset  onNavigate={switchTo} email={email} />}
 
       <style>{`
         @keyframes fadeInLeft {

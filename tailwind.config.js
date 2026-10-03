@@ -41,6 +41,11 @@ export default {
           600: '#164A94',
           700: '#123C79',
         },
+        // ── Landing carte bancaire ──
+        ink:   '#0F2347',
+        paper: '#F6F8FC',
+        gold:  '#E3B04B',
+        frost: '#DCEBFF',
         navy: {
           DEFAULT: '#0F172A',
           800: '#1E293B',

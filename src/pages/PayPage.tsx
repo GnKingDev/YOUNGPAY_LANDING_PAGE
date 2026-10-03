@@ -104,6 +104,8 @@ export default function PayPage() {
       })
       const d = await r.json()
       if (!r.ok) throw new Error(d.error ?? 'Erreur')
+      // Soutra Money : page de paiement hébergée → on redirige le client
+      if (d.webview_url) { window.location.href = d.webview_url; return }
       setTxId(d.transaction_id)
       setPollCount(0)
       setStep('pending')
