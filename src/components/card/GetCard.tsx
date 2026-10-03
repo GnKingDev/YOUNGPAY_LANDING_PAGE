@@ -1,8 +1,8 @@
 const STEPS = [
   { title: 'Créez votre compte',     text: 'Téléchargez l’app YoungPay et inscrivez-vous avec votre numéro de téléphone.' },
   { title: 'Vérifiez votre identité', text: 'Envoyez votre pièce d’identité depuis l’app. Cette vérification est obligatoire pour obtenir une carte.' },
-  { title: 'Rechargez votre wallet', text: 'Alimentez votre wallet YoungPay par Orange Money, KULU ou Soutra Money.' },
-  { title: 'Créez votre carte',      text: 'Choisissez une carte virtuelle ou physique, transférez-y de l’argent depuis le wallet, et payez.' },
+  { title: 'Commandez votre carte',  text: 'Choisissez une carte virtuelle ou physique, et réglez les frais par mobile money.' },
+  { title: 'Rechargez et payez',     text: 'Rechargez votre carte par Orange Money, KULU ou Soutra Money, puis payez en ligne.' },
 ]
 
 export default function GetCard() {

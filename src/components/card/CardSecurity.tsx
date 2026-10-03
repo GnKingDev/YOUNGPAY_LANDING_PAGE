@@ -3,7 +3,7 @@ const ITEMS = [
   { title: 'Gel en un geste',            text: 'Un doute sur votre carte ? Gelez-la depuis l’app : plus rien ne passe jusqu’à ce que vous la dégeliez.' },
   { title: 'Numéro affiché sur demande', text: 'Le numéro complet et le CVV ne s’affichent que lorsque vous le demandez, pour une durée limitée.' },
   { title: 'Réglages par carte',         text: 'Activez ou coupez séparément les paiements en ligne et les paiements internationaux.' },
-  { title: 'Annulation à tout moment',   text: 'Annulez une carte depuis l’app et récupérez son solde sur votre wallet.' },
+  { title: 'Annulation à tout moment',   text: 'Annulez une carte depuis l’app à tout moment, par exemple après une perte.' },
 ]
 
 export default function CardSecurity() {

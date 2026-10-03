@@ -12,7 +12,7 @@ export default function CardHero() {
             Payez en ligne partout dans le monde, depuis la Guinée.
           </h1>
           <p className="mt-6 text-lg leading-relaxed text-navy-600 max-w-[34rem]">
-            Une carte Visa que vous rechargez depuis votre wallet YoungPay.
+            Une carte Visa que vous rechargez par mobile money.
             Netflix, AliExpress, Google Play, Canva : vos paiements passent.
           </p>
           <div className="mt-9">
